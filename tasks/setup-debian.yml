@@ -1,0 +1,17 @@
+---
+- name: Install package dependencies
+  ansible.builtin.apt:
+    name:
+      - libfontconfig1
+      - libfreetype6
+      - python3-defusedxml
+      - python3-pexpect
+      - python3-pip
+      - unzip
+    state: latest
+    update_cache: true
+  become: true
+
+- name: Install jmespath python package dependencies
+  ansible.builtin.pip:
+    name: jmespath

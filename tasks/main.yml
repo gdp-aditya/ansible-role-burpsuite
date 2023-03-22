@@ -1,0 +1,32 @@
+---
+# tasks file for ansible-role-burpsuite
+
+- ansible.builtin.import_tasks: validations.yml
+
+- ansible.builtin.import_tasks: variables.yml
+
+# OS dependencies
+- ansible.builtin.include_tasks: setup-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- ansible.builtin.include_tasks: setup-redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Lookup latest version data
+  ansible.builtin.include_tasks: lookup-latest-version.yml
+  when: burpsuite_version == "latest"
+
+# Check previous installation
+- name: Check for previous Burp Suite installation
+  ansible.builtin.import_tasks: check-previous-install.yml
+
+# Install tasks
+- name: Install Burp Suite
+  ansible.builtin.include_tasks: install.yml
+  when: installed_version is not defined or installed_version != _burpsuite_installer_version
+
+# Burp Suite extras
+#- name: Deploy extras
+#  ansible.builtin.import_tasks: deploy-extras.yml
+
+
